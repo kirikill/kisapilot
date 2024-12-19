@@ -49,8 +49,8 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
       "HAS_LANE_SAFETY": 0,  # hide LKAS settings
       "LKA_ACTIVE": 3 if lat_active else 0,  # this changes sometimes, 3 seems to indicate engaged
       "NEW_SIGNAL_2": 0,
-      "LKAS_ANGLE_CMD": -apply_angle,
-      "LKAS_ANGLE_ACTIVE": 2 if lat_active else 1,
+      "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
+      "LKAS_ANGLE_ACTIVE": 2 if lat_active else 0,
       # a torque scale value? ramps up when steering, highest seen is 234
       # "UNKNOWN": 50 if lat_active and not steering_pressed else 0,
       "UNKNOWN": max_torque if lat_active else 0,
@@ -86,10 +86,27 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
 
 def create_suppress_lfa(packer, CAN, hda2_lfa_block_msg, hda2_alt_steering, enabled, lfa_cnt):
   suppress_msg = "CAM_0x362" if hda2_alt_steering else "CAM_0x2a4"
-  msg_bytes = 32 if hda2_alt_steering else 24
 
-  values = {f"BYTE{i}": hda2_lfa_block_msg[f"BYTE{i}"] for i in range(3, msg_bytes) if i != 7}
-  values["COUNTER"] = hda2_lfa_block_msg["COUNTER"]
+  #msg_bytes = 32 if hda2_alt_steering else 24
+  # values = {f"BYTE{i}": hda2_lfa_block_msg[f"BYTE{i}"] for i in range(9, msg_bytes)}
+  values["LEFT_LANE_LINE_PROB"] = hda2_lfa_block_msg["LEFT_LANE_LINE_PROB"] # maybe double lane above 20
+  values["RIGHT_LANE_LINE_PROB"] = hda2_lfa_block_msg["RIGHT_LANE_LINE_PROB"] # maybe double lane above 20
+  values["LEFT_LANE_TYPE"] = hda2_lfa_block_msg["LEFT_LANE_TYPE"]
+  values["RIGHT_LANE_TYPE"] = hda2_lfa_block_msg["RIGHT_LANE_TYPE"]
+  values["LEFT_LANE_COLOR"] = hda2_lfa_block_msg["LEFT_LANE_COLOR"]
+  values["RIGHT_LANE_COLOR"] = hda2_lfa_block_msg["RIGHT_LANE_COLOR"]
+  values["LEFT_GUARD"] = hda2_lfa_block_msg["LEFT_GUARD"]
+  values["RIGHT_GUARD"] = hda2_lfa_block_msg["RIGHT_GUARD"]
+  values["LEFT_BLOCKED"] = hda2_lfa_block_msg["LEFT_BLOCKED"]
+  values["RIGHT_BLOCKED"] = hda2_lfa_block_msg["RIGHT_BLOCKED"]
+  values["DISTANCE_1"] = hda2_lfa_block_msg["DISTANCE_1"]
+  values["DISTANCE_2"] = hda2_lfa_block_msg["DISTANCE_2"]
+  values["DISTANCE_3"] = hda2_lfa_block_msg["DISTANCE_3"]
+  values["DISTANCE_4"] = hda2_lfa_block_msg["DISTANCE_4"]
+  values["DISTANCE_5"] = hda2_lfa_block_msg["DISTANCE_5"]
+  values["DISTANCE_6"] = hda2_lfa_block_msg["DISTANCE_6"]
+  values["DISTANCE_7"] = hda2_lfa_block_msg["DISTANCE_7"]
+  values["DISTANCE_8"] = hda2_lfa_block_msg["DISTANCE_8"]
   values["SET_ME_0"] = 0
   values["SET_ME_0_2"] = 0
   values["LEFT_LANE_LINE"] = 0 if enabled else 3

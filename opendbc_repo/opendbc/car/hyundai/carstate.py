@@ -628,7 +628,8 @@ class CarState(CarStateBase):
       ret.gasPressed = bool(cp.vl[self.accelerator_msg_canfd]["ACCELERATOR_PEDAL_PRESSED"])
 
     ret.brakePressed = cp.vl["TCS"]["DriverBraking"] == 1
-    ret.brakeLights = bool(cp.vl["BRAKE"]["BRAKE_LIGHT"])
+    if self.CP.brakeAvailable:
+      ret.brakeLights = bool(cp.vl["BRAKE"]["BRAKE_LIGHT"])
 
     ret.doorOpen = cp.vl["DOORS_SEATBELTS"]["DRIVER_DOOR"] == 1
     ret.seatbeltUnlatched = cp.vl["DOORS_SEATBELTS"]["DRIVER_SEATBELT"] == 0
@@ -637,13 +638,14 @@ class CarState(CarStateBase):
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(gear))
 
     # kisa
-    ret.tpms = self.get_tpms(
-      cp.vl["TPMS"]["UNIT"],
-      cp.vl["TPMS"]["PRESSURE_FL"],
-      cp.vl["TPMS"]["PRESSURE_FR"],
-      cp.vl["TPMS"]["PRESSURE_RL"],
-      cp.vl["TPMS"]["PRESSURE_RR"],
-    )
+    if self.CP.tpmsAvailable:
+      ret.tpms = self.get_tpms(
+        cp.vl["TPMS"]["UNIT"],
+        cp.vl["TPMS"]["PRESSURE_FL"],
+        cp.vl["TPMS"]["PRESSURE_FR"],
+        cp.vl["TPMS"]["PRESSURE_RL"],
+        cp.vl["TPMS"]["PRESSURE_RR"],
+      )
 
     # TODO: figure out positions
     ret.wheelSpeeds = self.get_wheel_speeds(
@@ -803,8 +805,9 @@ class CarState(CarStateBase):
     ret.accFaulted = cp.vl["TCS"]["ACCEnable"] != 0  # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     ret.cruiseButtons = self.cruise_buttons[-1]
 
-    if self.cruise_btns_msg_canfd == "CRUISE_BUTTONS":
-      self.cruise_btn_info = copy.copy(cp_cruise_info.vl[self.cruise_btns_msg_canfd])
+    if not (self.CP.flags & HyundaiFlags.CANFD_ALT_BUTTONS):
+      if self.cruise_btns_msg_canfd == "CRUISE_BUTTONS":
+        self.cruise_btn_info = copy.copy(cp_cruise_info.vl[self.cruise_btns_msg_canfd])
 
     if self.CP.flags & HyundaiFlags.CANFD_HDA2:
       self.hda2_lfa_block_msg = copy.copy(cp_cam.vl["CAM_0x362"] if self.CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING
@@ -829,9 +832,7 @@ class CarState(CarStateBase):
       ("CRUISE_BUTTONS_ALT", 50),
       ("BLINKERS", 4),
       ("DOORS_SEATBELTS", 4),
-      ("BRAKE", 100),
       ("ESP_STATUS", 100),
-      ("TPMS", 5),
     ]
 
     if CP.flags & HyundaiFlags.EV:
@@ -863,6 +864,16 @@ class CarState(CarStateBase):
     if CP.adrvAvailable:
       pt_messages += [
         ("ADRV_0x200", 20),
+      ]
+
+    if CP.brakeAvailable:
+      pt_messages += [
+        ("BRAKE", 100),
+      ]
+
+    if CP.tpmsAvailable:
+      pt_messages += [
+        ("TPMS", 5),
       ]
 
     cam_messages = []

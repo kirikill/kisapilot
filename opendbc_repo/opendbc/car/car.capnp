@@ -632,6 +632,8 @@ struct CarParams {
   navAvailable @94 :Bool;
   isCanFD @95 :Bool;
   adrvAvailable @96 :Bool;
+  brakeAvailable @97 :Bool;
+  tpmsAvailable @98 :Bool;
 
   struct SmoothSteerData
   {
