@@ -32,7 +32,7 @@ class CarInterface(CarInterfaceBase):
 
     params = Params()
     if int(params.get("UserSpecificFeature", encoding="utf8")) == 22:
-      hda2= True
+      hda2 = True
 
     if ret.flags & HyundaiFlags.CANFD:
       # Shared configuration for CAN-FD cars
