@@ -805,7 +805,7 @@ class CarState(CarStateBase):
     ret.accFaulted = cp.vl["TCS"]["ACCEnable"] != 0  # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     ret.cruiseButtons = self.cruise_buttons[-1]
 
-    if not (CP.flags & HyundaiFlags.CANFD_ALT_BUTTONS):
+    if not (self.CP.flags & HyundaiFlags.CANFD_ALT_BUTTONS):
       if self.cruise_btns_msg_canfd == "CRUISE_BUTTONS":
         self.cruise_btn_info = copy.copy(cp_cruise_info.vl[self.cruise_btns_msg_canfd])
 
