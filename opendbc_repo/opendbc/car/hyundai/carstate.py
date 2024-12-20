@@ -628,7 +628,8 @@ class CarState(CarStateBase):
       ret.gasPressed = bool(cp.vl[self.accelerator_msg_canfd]["ACCELERATOR_PEDAL_PRESSED"])
 
     ret.brakePressed = cp.vl["TCS"]["DriverBraking"] == 1
-    ret.brakeLights = bool(cp.vl["BRAKE"]["BRAKE_LIGHT"])
+    if self.CP.brakeAvailable:
+      ret.brakeLights = bool(cp.vl["BRAKE"]["BRAKE_LIGHT"])
 
     ret.doorOpen = cp.vl["DOORS_SEATBELTS"]["DRIVER_DOOR"] == 1
     ret.seatbeltUnlatched = cp.vl["DOORS_SEATBELTS"]["DRIVER_SEATBELT"] == 0
@@ -637,13 +638,14 @@ class CarState(CarStateBase):
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(gear))
 
     # kisa
-    ret.tpms = self.get_tpms(
-      cp.vl["TPMS"]["UNIT"],
-      cp.vl["TPMS"]["PRESSURE_FL"],
-      cp.vl["TPMS"]["PRESSURE_FR"],
-      cp.vl["TPMS"]["PRESSURE_RL"],
-      cp.vl["TPMS"]["PRESSURE_RR"],
-    )
+    if self.CP.tpmsAvailable:
+      ret.tpms = self.get_tpms(
+        cp.vl["TPMS"]["UNIT"],
+        cp.vl["TPMS"]["PRESSURE_FL"],
+        cp.vl["TPMS"]["PRESSURE_FR"],
+        cp.vl["TPMS"]["PRESSURE_RL"],
+        cp.vl["TPMS"]["PRESSURE_RR"],
+      )
 
     # TODO: figure out positions
     ret.wheelSpeeds = self.get_wheel_speeds(
