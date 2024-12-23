@@ -87,8 +87,11 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
 def create_suppress_lfa(packer, CAN, hda2_lfa_block_msg, hda2_alt_steering, enabled, lfa_cnt):
   suppress_msg = "CAM_0x362" if hda2_alt_steering else "CAM_0x2a4"
 
-  #msg_bytes = 32 if hda2_alt_steering else 24
+  # msg_bytes = 32 if hda2_alt_steering else 24
   # values = {f"BYTE{i}": hda2_lfa_block_msg[f"BYTE{i}"] for i in range(9, msg_bytes)}
+
+  values = hda2_lfa_block_msg
+  
   values["LEFT_LANE_LINE_PROB"] = hda2_lfa_block_msg["LEFT_LANE_LINE_PROB"] # maybe double lane above 20
   values["RIGHT_LANE_LINE_PROB"] = hda2_lfa_block_msg["RIGHT_LANE_LINE_PROB"] # maybe double lane above 20
   values["LEFT_LANE_TYPE"] = hda2_lfa_block_msg["LEFT_LANE_TYPE"]

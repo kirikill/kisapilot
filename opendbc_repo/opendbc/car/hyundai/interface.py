@@ -31,8 +31,6 @@ class CarInterface(CarInterfaceBase):
     CAN = CanBus(None, fingerprint, hda2)
 
     params = Params()
-    if int(params.get("UserSpecificFeature", encoding="utf8")) == 22:
-      hda2 = True
 
     if ret.flags & HyundaiFlags.CANFD:
       # Shared configuration for CAN-FD cars
@@ -178,7 +176,7 @@ class CarInterface(CarInterfaceBase):
           ret.safetyConfigs = [get_safety_config(structs.CarParams.SafetyModel.hyundai, 0)]
       elif candidate in LEGACY_SAFETY_MODE_CAR_ALT or (candidate in LEGACY_SAFETY_MODE_CAR and params.get_bool("UFCModeEnabled")):
         ret.safetyConfigs = [get_safety_config(structs.CarParams.SafetyModel.hyundaiCommunity1Legacy)]
-      elif arams.get_bool("UFCModeEnabled"):
+      elif params.get_bool("UFCModeEnabled"):
         ret.safetyConfigs = [get_safety_config(structs.CarParams.SafetyModel.hyundaiCommunity1)]
       elif candidate in LEGACY_SAFETY_MODE_CAR:
         # these cars require a special panda safety mode due to missing counters and checksums in the messages
