@@ -55,7 +55,6 @@ class CarState(CarStateBase):
     self.buttons_counter = 0
 
     self.cruise_info = {}
-    self.cruise_btn_info = {}
 
     # On some cars, CLU15->CF_Clu_VehicleSpeed can oscillate faster than the dash updates. Sample at 5 Hz
     self.cluster_speed = 0
@@ -804,10 +803,6 @@ class CarState(CarStateBase):
     self.buttons_counter = cp.vl[self.cruise_btns_msg_canfd]["COUNTER"]
     ret.accFaulted = cp.vl["TCS"]["ACCEnable"] != 0  # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     ret.cruiseButtons = self.cruise_buttons[-1]
-
-    if not (self.CP.flags & HyundaiFlags.CANFD_ALT_BUTTONS):
-      if self.cruise_btns_msg_canfd == "CRUISE_BUTTONS":
-        self.cruise_btn_info = copy.copy(cp_cruise_info.vl[self.cruise_btns_msg_canfd])
 
     if self.CP.flags & HyundaiFlags.CANFD_HDA2:
       self.hda2_lfa_block_msg = copy.copy(cp_cam.vl["CAM_0x362"] if self.CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING
