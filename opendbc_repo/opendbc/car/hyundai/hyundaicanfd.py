@@ -40,26 +40,17 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
 
   if angle_control:
     values = {
-      "LKA_MODE": 0,
+      "LKA_ACTIVE": 3 if lat_active else 0,
       "LKA_ICON": 2 if enabled else 1,
-      "TORQUE_REQUEST": 0, #apply_steer,
-      "LKA_ASSIST": 0,
-      "STEER_REQ": 0,  # 1 if lat_active else 0,
-      "STEER_MODE": 0,
-      "HAS_LANE_SAFETY": 0,  # hide LKAS settings
-      "LKA_ACTIVE": 3 if lat_active else 0,  # this changes sometimes, 3 seems to indicate engaged
-      "NEW_SIGNAL_2": 0,
-      "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
       "LKAS_ANGLE_ACTIVE": 2 if lat_active else 0,
-      # a torque scale value? ramps up when steering, highest seen is 234
-      # "UNKNOWN": 50 if lat_active and not steering_pressed else 0,
-      "UNKNOWN": max_torque if lat_active else 0,
-      "NEW_SIGNAL_1": 10,
+      "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
+      "LKAS_ANGLE_MAX_TORQUE": max_torque if lat_active else 0, # max is 250
+      "LKAS_SIGNAL_1": 10,
       "NEW_SIGNAL_3": 9,
-      "NEW_SIGNAL_4": 1,
-      "NEW_SIGNAL_5": 1,
-      "NEW_SIGNAL_6": 1,
-      "NEW_SIGNAL_7": 1,
+      "LKAS_SIGNAL_2": 1,
+      "LKAS_SIGNAL_3": 1,
+      "LKAS_SIGNAL_4": 1,
+      "LKAS_SIGNAL_5": 1,
     }
   else:
     values = {
