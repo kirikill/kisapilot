@@ -40,6 +40,13 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
 
   if angle_control:
     values = {
+      "LKA_MODE": 0,
+      "TORQUE_REQUEST": 0,
+      "LKA_ASSIST": 0,
+      "STEER_REQ": 0,
+      "STEER_MODE": 0,
+      "HAS_LANE_SAFETY": 0,
+      "NEW_SIGNAL_2": 0,
       "LKA_ACTIVE": 3 if lat_active else 0,
       "LKA_ICON": 2 if enabled else 1,
       "LKAS_ANGLE_ACTIVE": 2 if lat_active else 0,
