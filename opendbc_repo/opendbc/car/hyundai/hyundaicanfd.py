@@ -38,46 +38,58 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
 
   ret = []
 
-  if angle_control:
-    values = {
-      "LKA_MODE": 0,
-      "TORQUE_REQUEST": 0,
-      "LKA_ASSIST": 0,
-      "STEER_REQ": 0,
-      "STEER_MODE": 0,
-      "HAS_LANE_SAFETY": 0,
-      "NEW_SIGNAL_2": 0,
-      "LKA_ACTIVE": 3 if lat_active else 0,
-      "LKA_ICON": 2 if enabled else 1,
-      "LKAS_ANGLE_ACTIVE": 2 if lat_active else 0,
-      "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
-      "LKAS_ANGLE_MAX_TORQUE": max_torque if lat_active else 0, # max is 250
-      "LKAS_SIGNAL_1": 10,
-      "NEW_SIGNAL_3": 9,
-      "LKAS_SIGNAL_2": 1,
-      "LKAS_SIGNAL_3": 1,
-      "LKAS_SIGNAL_4": 1,
-      "LKAS_SIGNAL_5": 1,
-    }
+  if CP.flags & HyundaiFlags.CANFD_HDA2:
+    hda2_lkas_msg = "LKAS_ALT" if CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING else "LKAS"
+    if angle_control:
+      values = {
+        "LKA_MODE": 0,
+        "TORQUE_REQUEST": 0,
+        "LKA_ASSIST": 0,
+        "STEER_REQ": 0,
+        "STEER_MODE": 0,
+        "HAS_LANE_SAFETY": 0,
+        "NEW_SIGNAL_2": 0,
+        "LKA_ACTIVE": 3 if lat_active else 0,
+        "LKA_ICON": 2 if enabled else 1,
+        "LKAS_ANGLE_ACTIVE": 2 if lat_active else 0,
+        "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
+        "LKAS_ANGLE_MAX_TORQUE": max_torque if lat_active else 0, # max is 250
+        "LKAS_SIGNAL_1": 10,
+        "NEW_SIGNAL_3": 9,
+        "LKAS_SIGNAL_2": 1,
+        "LKAS_SIGNAL_3": 1,
+        "LKAS_SIGNAL_4": 1,
+        "LKAS_SIGNAL_5": 1,
+      }
+    else:
+      values = {
+        "LKA_MODE": 2,
+        "LKA_ICON": 2 if enabled else 1,
+        "TORQUE_REQUEST": apply_steer,
+        "LKA_ASSIST": 0,
+        "STEER_REQ": 1 if lat_active else 0,
+        "STEER_MODE": 0,
+        "HAS_LANE_SAFETY": 0,  # hide LKAS settings
+        "NEW_SIGNAL_1": 0,
+        "NEW_SIGNAL_2": 0,
+      }
+    if CP.openpilotLongitudinalControl:
+      ret.append(packer.make_can_msg("LFA", CAN.ECAN, values))
+    ret.append(packer.make_can_msg(hda2_lkas_msg, CAN.ACAN, values))
   else:
     values = {
-      "LKA_MODE": 2,
+      "LKA_MODE": 0,
+      "LKA_ACTIVE": 3 if lat_active else 0,
       "LKA_ICON": 2 if enabled else 1,
       "TORQUE_REQUEST": apply_steer,
       "LKA_ASSIST": 0,
       "STEER_REQ": 1 if lat_active else 0,
       "STEER_MODE": 0,
       "HAS_LANE_SAFETY": 0,  # hide LKAS settings
-      "NEW_SIGNAL_1": 0,
       "NEW_SIGNAL_2": 0,
+      "NEW_SIGNAL_3": 31 if lat_active else 100,
+      "NEW_SIGNAL_4": 1,
     }
-
-  if CP.flags & HyundaiFlags.CANFD_HDA2:
-    hda2_lkas_msg = "LKAS_ALT" if CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING else "LKAS"
-    if CP.openpilotLongitudinalControl:
-      ret.append(packer.make_can_msg("LFA", CAN.ECAN, values))
-    ret.append(packer.make_can_msg(hda2_lkas_msg, CAN.ACAN, values))
-  else:
     ret.append(packer.make_can_msg("LFA", CAN.ECAN, values))
 
   return ret
