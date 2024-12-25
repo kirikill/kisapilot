@@ -162,26 +162,25 @@ static bool hyundai_canfd_tx_hook(const CANPacket_t *to_send) {
   // steering
   const int steer_addr = (hyundai_canfd_hda2 && !hyundai_longitudinal) ? hyundai_canfd_hda2_get_lkas_addr() : 0x12a;
   if (addr == steer_addr) {
-
     bool angle_control = ((GET_BYTE(to_send, 9) >> 5) & 0x3U) >= 1;
 
     if (angle_control) {
-      bool lka_angle_active = GET_BIT(to_send, 77U);
       int max_torque = GET_BYTE(to_send, 12U);
-      int raw_angle_cmd = ((GET_BYTE(to_send, 10) << 6U) | (GET_BYTE(to_send, 11) >> 2U)) & 0x3FFF;
-
-      if (raw_angle_cmd > 8191) {
-        raw_angle_cmd -= 16384;
-      }
-
-      float lkas_angle_cmd = raw_angle_cmd * -0.0586f; // -480 ~ +480
-
-      if (steer_angle_cmd_checks(lkas_angle_cmd, lka_angle_active, HYUNDAI_CANFD_ANGLE_LIMITS)) {
-        tx = false;
-      }
-
       if (!controls_allowed && (max_torque != 0)) {
         tx = false;
+      } else {
+        bool lka_angle_active = GET_BIT(to_send, 77U);
+        int raw_angle_cmd = ((GET_BYTE(to_send, 10) << 6U) | (GET_BYTE(to_send, 11) >> 2U)) & 0x3FFF;
+
+        if (raw_angle_cmd > 8191) {
+          raw_angle_cmd -= 16384;
+        }
+
+        float lkas_angle_cmd = raw_angle_cmd * -0.0586f; // -480 ~ +480
+
+        if (steer_angle_cmd_checks(lkas_angle_cmd, lka_angle_active, HYUNDAI_CANFD_ANGLE_LIMITS)) {
+          tx = false;
+        }
       }
     } else {
       int desired_torque = (((GET_BYTE(to_send, 6) & 0xFU) << 7U) | (GET_BYTE(to_send, 5) >> 1U)) - 1024U;
