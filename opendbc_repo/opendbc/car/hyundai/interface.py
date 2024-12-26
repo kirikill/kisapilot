@@ -1,7 +1,7 @@
 from panda import Panda
 from opendbc.car import Bus, get_safety_config, structs
 from opendbc.car.hyundai.hyundaicanfd import CanBus
-from opendbc.car.hyundai.values import HyundaiFlags, CAR, DBC, CAMERA_SCC_CAR, CANFD_RADAR_SCC_CAR, \
+from opendbc.car.hyundai.values import HyundaiFlags, CAR, DBC, CANFD_RADAR_SCC_CAR, \
                                                    CANFD_UNSUPPORTED_LONGITUDINAL_CAR, \
                                                    UNSUPPORTED_LONGITUDINAL_CAR, LEGACY_SAFETY_MODE_CAR, LEGACY_SAFETY_MODE_CAR_ALT, ANGLE_CONTROL_CAR
 from opendbc.car.hyundai.radar_interface import RADAR_START_ADDR
@@ -91,7 +91,7 @@ class CarInterface(CarInterfaceBase):
     else:
       ret.isCanFD = False
       # Shared configuration for non CAN-FD cars
-      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | CAMERA_SCC_CAR)
+      ret.experimentalLongitudinalAvailable = candidate not in UNSUPPORTED_LONGITUDINAL_CAR
       ret.enableBsm = 0x58b in fingerprint[0]
       ret.sccBus = 2 if int(params.get("KISALongAlt", encoding="utf8")) in (1, 2) and not params.get_bool("ExperimentalLongitudinalEnabled") else 0
       ret.bsmAvailable = True if 1419 in fingerprint[0] else False
