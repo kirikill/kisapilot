@@ -1355,7 +1355,7 @@ class CarController(CarControllerBase):
     new_actuators = actuators.as_builder()
     new_actuators.steer = apply_steer / self.params.STEER_MAX
     new_actuators.steerOutputCan = apply_steer
-    new_actuators.steeringAngleDeg = apply_angle
+    new_actuators.steeringAngleDeg = apply_angle if self.to_avoid_lkas_fault_enabled or self.CP.flags & HyundaiFlags.CANFD or not lat_active else 0
     new_actuators.accel = self.accel if self.CP.sccBus == 2 else accel
 
     new_actuators.aqValue = self.aq_value

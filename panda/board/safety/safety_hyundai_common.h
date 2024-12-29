@@ -77,16 +77,6 @@ void hyundai_common_cruise_state_check(const bool cruise_engaged) {
   }
 }
 
-void hyundai_common_cruise_state_check_alt(const bool cruise_engaged) {
-  if (cruise_engaged && !cruise_engaged_prev) {
-    controls_allowed = true;
-  }
-  if (!cruise_engaged) {
-    controls_allowed = false;
-  }
-  cruise_engaged_prev = cruise_engaged;
-}
-
 void hyundai_common_cruise_buttons_check(const int cruise_button, const bool main_button, const bool lfa_button) {
   if ((cruise_button == HYUNDAI_BTN_RESUME) || (cruise_button == HYUNDAI_BTN_SET) || (cruise_button == HYUNDAI_BTN_CANCEL) || main_button || lfa_button) {
     hyundai_last_button_interaction = 0U;
@@ -104,6 +94,16 @@ void hyundai_common_cruise_buttons_check(const int cruise_button, const bool mai
 
     cruise_button_prev = cruise_button;
   }
+}
+
+void hyundai_common_cruise_state_check_alt(const bool cruise_engaged) {
+  if (cruise_engaged && !cruise_engaged_prev) {
+    controls_allowed = true;
+  }
+  if (!cruise_engaged) {
+    controls_allowed = false;
+  }
+  cruise_engaged_prev = cruise_engaged;
 }
 
 uint32_t hyundai_common_canfd_compute_checksum(const CANPacket_t *to_push) {
