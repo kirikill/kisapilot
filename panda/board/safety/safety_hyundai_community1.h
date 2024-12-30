@@ -325,7 +325,7 @@ static safety_config hyundai_community1_init(uint16_t param) {
 }
 
 static safety_config hyundai_community1_legacy_init(uint16_t param) {
-  const int HYUNDAI_PARAM_CANFD_LFA_ENG = 64;
+  //const int HYUNDAI_PARAM_CANFD_LFA_ENG = 64;
 
   // older hyundai models have less checks due to missing counters and checksums
   static RxCheck hyundai_community1_legacy_rx_checks[] = {
@@ -338,7 +338,8 @@ static safety_config hyundai_community1_legacy_init(uint16_t param) {
   hyundai_community1_legacy = true;
   hyundai_longitudinal = false;
   hyundai_camera_scc = false;
-  hyundai_controls_allowed = GET_FLAG(param, HYUNDAI_PARAM_CANFD_LFA_ENG);
+  //hyundai_controls_allowed = GET_FLAG(param, HYUNDAI_PARAM_CANFD_LFA_ENG);
+  hyundai_controls_allowed = true;
   return BUILD_SAFETY_CFG(hyundai_community1_legacy_rx_checks, HYUNDAI_COMMUNITY1_TX_MSGS);
 }
 
