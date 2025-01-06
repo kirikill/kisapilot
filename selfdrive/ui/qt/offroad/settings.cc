@@ -5,10 +5,7 @@
 #include <vector>
 
 #include <QDebug>
-#include <QProcess> // kisapilot
-#include <QDateTime> // kisapilot
 #include <QTimer> // kisapilot
-#include <QFileInfo> // kisapilot
 
 #include "common/watchdog.h"
 #include "common/util.h"
@@ -174,6 +171,7 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   connect(resetCalibBtn, &ButtonControl::clicked, [&]() {
     if (ConfirmationDialog::confirm(tr("Are you sure you want to reset calibration?"), tr("Reset"), this)) {
       params.remove("CalibrationParams");
+      params.remove("LiveTorqueParameters");
       params.putBool("OnRoadRefresh", true);
       QTimer::singleShot(3000, [this]() {
         params.putBool("OnRoadRefresh", false);
@@ -329,113 +327,6 @@ void DevicePanel::poweroff() {
     ConfirmationDialog::alert(tr("Disengage to Power Off"), this);
   }
 }
-
-SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
-  gitRemoteLbl = new LabelControl(tr("Git Remote"));
-  gitBranchLbl = new LabelControl(tr("Git Branch"));
-  gitCommitLbl = new LabelControl(tr("Commit(Local/Remote)"));
-  versionLbl = new LabelControl(tr("Fork"));
-  lastUpdateLbl = new LabelControl(tr("Last Update Check"), "", "");
-  updateBtn = new ButtonControl(tr("Check for Updates"), "");
-  connect(updateBtn, &ButtonControl::clicked, [=]() {
-    std::system("date '+%F %T' > /data/params/d/LastUpdateTime");
-    QString last_ping = QString::fromStdString(params.get("LastAthenaPingTime"));
-    QString desc = "";
-    QString commit_local = QString::fromStdString(params.get("GitCommit").substr(0, 5));
-    QString commit_remote = QString::fromStdString(params.get("GitCommitRemote").substr(0, 5));
-    QString commit_local_date = QString::fromStdString(params.get("GitCommitLocalDate"));
-    QString commit_remote_date = QString::fromStdString(params.get("GitCommitRemoteDate"));
-    QString empty = "";
-    desc = tr("LOCAL: %1(%2)  /  REMOTE: %3(%4)").arg(commit_local, commit_local_date, commit_remote, commit_remote_date);
-    if (!last_ping.length()) {
-      desc = tr("Network connection is missing or unstable. Check the connection.");
-      ConfirmationDialog::alert(desc, this);
-    } else if (commit_local == commit_remote) {
-      params.put("RunCustomCommand", "1", 1);
-      desc = tr("Checking update takes a time. If Same message, no update required.");
-      ConfirmationDialog::alert(desc, this);
-    } else {
-      if (QFileInfo::exists("/data/KisaPilot_Updates.txt")) {
-        QFileInfo fileInfo;
-        fileInfo.setFile("/data/KisaPilot_Updates.txt");
-        const std::string txt = util::read_file("/data/KisaPilot_Updates.txt");
-        if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
-          if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {
-            std::system("touch /data/kisa_compiling");
-            params.put("RunCustomCommand", "2", 1);
-          }
-        }
-      } else {
-        QString cmd1 = "wget https://raw.githubusercontent.com/kisapilot/openpilot/"+QString::fromStdString(params.get("GitBranch"))+"/KisaPilot_Updates.txt -O /data/KisaPilot_Updates.txt";
-        QProcess::execute(cmd1);
-        QTimer::singleShot(2000, []() {});
-        if (QFileInfo::exists("/data/KisaPilot_Updates.txt")) {
-          QFileInfo fileInfo;
-          fileInfo.setFile("/data/KisaPilot_Updates.txt");
-          const std::string txt = util::read_file("/data/KisaPilot_Updates.txt");
-          if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
-            if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {
-              std::system("touch /data/kisa_compiling");
-              params.put("RunCustomCommand", "2", 1);
-            }
-          }
-        }
-      }
-    }
-    updateLabels();
-  });
-
-  auto uninstallBtn = new ButtonControl(tr("Uninstall %1").arg(getBrand()), tr("UNINSTALL"));
-  connect(uninstallBtn, &ButtonControl::clicked, [&]() {
-    if (ConfirmationDialog::confirm2(tr("Are you sure you want to uninstall?"), this)) {
-      params.putBool("DoUninstall", true);
-    }
-  });
-  connect(parent, SIGNAL(offroadTransition(bool)), uninstallBtn, SLOT(setEnabled(true)));
-
-  QWidget *widgets[] = {versionLbl, gitRemoteLbl, gitBranchLbl, lastUpdateLbl, updateBtn, gitCommitLbl};
-  for (QWidget* w : widgets) {
-    addItem(w);
-  }
-
-  //addItem(new GitHash());
-  addItem(new CPresetWidget());
-  addItem(new CGitGroup());
-  //addItem(new CUtilWidget(this));
-
-  addItem(uninstallBtn);
-}
-
-void SoftwarePanel::showEvent(QShowEvent *event) {
-  updateLabels();
-}
-
-void SoftwarePanel::updateLabels() {
-  QString lastUpdate = "";
-  QString tm = QString::fromStdString(params.get("LastUpdateTime").substr(0, 19));
-  if (tm != "") {
-    lastUpdate = timeAgo(QDateTime::fromString(tm, "yyyy-MM-dd HH:mm:ss"));
-  }
-  QString lhash = QString::fromStdString(params.get("GitCommit").substr(0, 5));
-  QString rhash = QString::fromStdString(params.get("GitCommitRemote").substr(0, 5));
-  QString lhash_date = QString::fromStdString(params.get("GitCommitLocalDate"));
-  QString rhash_date = QString::fromStdString(params.get("GitCommitRemoteDate"));
-
-  if (lhash == rhash) {
-    gitCommitLbl->setStyleSheet("color: #aaaaaa");
-  } else {
-    gitCommitLbl->setStyleSheet("color: #0099ff");
-  }
-
-  versionLbl->setText("KisaPilot");
-  lastUpdateLbl->setText(lastUpdate);
-  updateBtn->setText(tr("CHECK"));
-  updateBtn->setEnabled(true);
-  gitRemoteLbl->setText(QString::fromStdString(params.get("GitRemote").substr(19)));
-  gitBranchLbl->setText(QString::fromStdString(params.get("GitBranch")));
-  gitCommitLbl->setText(lhash + "(" + lhash_date + ")" + " / " + rhash + "(" + rhash_date + ")");
-}
-
 
 UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   QVBoxLayout *layout = new QVBoxLayout(this);
@@ -594,7 +485,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
 
   // setup panels
   DevicePanel *device = new DevicePanel(this);
-  SoftwarePanel *software = new SoftwarePanel(this);
   QObject::connect(device, &DevicePanel::reviewTrainingGuide, this, &SettingsWindow::reviewTrainingGuide);
 
   TogglesPanel *toggles = new TogglesPanel(this);
@@ -607,7 +497,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Device"), device},
     {tr("Network"), networking},
     {tr("Toggles"), toggles},
-    {tr("Software"), software},
+    {tr("Software"), new SoftwarePanel(this)},
     {tr("UIMenu"), new UIPanel(this)},
     {tr("Driving"), new DrivingPanel(this)},
     {tr("Developer"), new DeveloperPanel(this)},

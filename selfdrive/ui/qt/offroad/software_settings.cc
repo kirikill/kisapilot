@@ -15,6 +15,8 @@
 #include "selfdrive/ui/qt/widgets/input.h"
 #include "system/hardware/hw.h"
 
+#include "selfdrive/ui/qt/widgets/kisapilot.h" // kisapilot
+
 
 void SoftwarePanel::checkForUpdates() {
   std::system("pkill -SIGUSR1 -f system.updated.updated");
@@ -45,6 +47,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   installBtn = new ButtonControl(tr("Install Update"), tr("INSTALL"));
   connect(installBtn, &ButtonControl::clicked, [=]() {
     installBtn->setEnabled(false);
+    std::system("touch /data/kisa_compiling");
     params.putBool("DoReboot", true);
   });
   addItem(installBtn);
@@ -54,7 +57,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   connect(targetBranchBtn, &ButtonControl::clicked, [=]() {
     auto current = params.get("GitBranch");
     QStringList branches = QString::fromStdString(params.get("UpdaterAvailableBranches")).split(",");
-    for (QString b : {current.c_str(), "devel-staging", "devel", "nightly", "nightly-dev", "master-ci", "master"}) {
+    for (QString b : {current.c_str(), "KisaPilot", "KisaPilot_test", "KisaPilot_test2", "KisaPilot_test3"}) {
       auto i = branches.indexOf(b);
       if (i >= 0) {
         branches.removeAt(i);
@@ -73,6 +76,9 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   if (!params.getBool("IsTestedBranch")) {
     addItem(targetBranchBtn);
   }
+
+  addItem(new CPresetWidget());
+  addItem(new CGitGroup());
 
   // uninstall button
   auto uninstallBtn = new ButtonControl(tr("Uninstall %1").arg(getBrand()), tr("UNINSTALL"));
