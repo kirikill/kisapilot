@@ -1069,7 +1069,7 @@ void HudRenderer::drawSetSpeed(QPainter &p, const QRect &surface_rect) {
   }
 
   // Draw "MAX" text and set speed
-  QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(set_speed)) : "-";
+  QString setSpeedStr = (is_cruise_set && set_speed != 255) ? QString::number(std::nearbyint(set_speed)) : "-";
   p.setFont(InterFont(70, QFont::Bold));
   p.setPen(whiteColor(200));
   p.drawText(set_speed_rect.adjusted(0, 10, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.ctrl_speed > 1?QString::number(s->scene.ctrl_speed, 'f', 0):setSpeedStr);

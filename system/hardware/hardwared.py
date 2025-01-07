@@ -65,14 +65,13 @@ def get_available_percenta(default=None):
 
   return available_percent
 
-def get_ip_address(self):
-  ipaddress = ""
+def get_ip_address():
   try:
-    out = subprocess.check_output("hostname -I", shell=True)
-    ipaddress = str(out.strip().decode()).replace(' ', '\n')
-  except Exception:
-    pass
-  return ipaddress
+    out = subprocess.check_output(["hostname", "-I"], text=True).strip()
+    ip_address = out.replace(' ', '\n')
+    return ip_address
+  except subprocess.CalledProcessError:
+    return ""
 
 def set_offroad_alert_if_changed(offroad_alert: str, show_alert: bool, extra_text: str | None=None):
   if prev_offroad_states.get(offroad_alert, None) == (show_alert, extra_text):

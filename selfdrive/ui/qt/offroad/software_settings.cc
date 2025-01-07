@@ -57,7 +57,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   connect(targetBranchBtn, &ButtonControl::clicked, [=]() {
     auto current = params.get("GitBranch");
     QStringList branches = QString::fromStdString(params.get("UpdaterAvailableBranches")).split(",");
-    for (QString b : {current.c_str(), "KisaPilot", "KisaPilot_test", "KisaPilot_test2", "KisaPilot_test3"}) {
+    for (QString b : {current.c_str(), "KisaPilot_test3", "KisaPilot_test2", "KisaPilot_test", "KisaPilot"}) {
       auto i = branches.indexOf(b);
       if (i >= 0) {
         branches.removeAt(i);
@@ -121,8 +121,8 @@ void SoftwarePanel::updateLabels() {
   }
 
   // updater only runs offroad
-  onroadLbl->setVisible(is_onroad);
-  downloadBtn->setVisible(!is_onroad);
+  onroadLbl->setVisible(false);
+  downloadBtn->setVisible(true);
 
   // download update
   QString updater_state = QString::fromStdString(params.get("UpdaterState"));
@@ -154,7 +154,7 @@ void SoftwarePanel::updateLabels() {
   versionLbl->setText(QString::fromStdString(params.get("UpdaterCurrentDescription")));
   versionLbl->setDescription(QString::fromStdString(params.get("UpdaterCurrentReleaseNotes")));
 
-  installBtn->setVisible(!is_onroad && params.getBool("UpdateAvailable"));
+  installBtn->setVisible(params.getBool("UpdateAvailable"));
   installBtn->setValue(QString::fromStdString(params.get("UpdaterNewDescription")));
   installBtn->setDescription(QString::fromStdString(params.get("UpdaterNewReleaseNotes")));
 
