@@ -686,7 +686,7 @@ class CarController(CarControllerBase):
     # CAN-FD platforms
     if self.CP.flags & HyundaiFlags.CANFD:
       hda2 = self.CP.flags & HyundaiFlags.CANFD_HDA2
-      #hda2_long = hda2 and self.CP.openpilotLongitudinalControl
+      hda2_long = hda2 and self.CP.openpilotLongitudinalControl
 
       angle_control = self.CP.carFingerprint in ANGLE_CONTROL_CAR
       # steering control
@@ -704,8 +704,7 @@ class CarController(CarControllerBase):
                                                           self.CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING, CC.enabled, bool(self.stock_lfa_counter)))
 
       # LFA and HDA icons
-      updateLfaHdaIcons = (not hda2) or angle_control
-      if self.frame % 5 == 0 and updateLfaHdaIcons:
+      if self.frame % 5 == 0 and (not hda2 or hda2_long):
         can_sends.append(hyundaicanfd.create_lfahda_cluster(self.packer, self.CAN, CC.enabled))
 
       # blinkers
