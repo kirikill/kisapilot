@@ -103,7 +103,6 @@ function launch {
 
   # KisaPilot Current Stat
   git log -n 1 --pretty=format:"/ %cd / %h" --date=short > /data/params/d/KisaPilotCurrentDescription
-  git log -n 1 --pretty=format:"%cs" | cut -c 6- | tr -d '\n\r' > /data/params/d/GitCommitLocalDate
 
   # KisaPilot Model check
   Model_Size=$(stat --printf=%s /data/openpilot/selfdrive/modeld/models/supercombo.onnx)

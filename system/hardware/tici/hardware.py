@@ -590,15 +590,6 @@ class Tici(HardwareBase):
       return False
     return True
 
-  def get_ip_address(self):
-    ipaddress = ""
-    try:
-      out = subprocess.check_output("hostname -I", shell=True)
-      ipaddress = str(out.strip().decode()).replace(' ', '\n')
-    except Exception:
-      pass
-    return ipaddress
-
 if __name__ == "__main__":
   t = Tici()
   t.configure_modem()

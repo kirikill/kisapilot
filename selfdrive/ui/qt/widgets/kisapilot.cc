@@ -196,7 +196,7 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Repository/Branch") )
   pBoxLayout->addWidget( new GitPullOnBootToggle() );
 
   pBoxLayout->addWidget( new SwitchOpenpilot() ); // kisa
-  pBoxLayout->addWidget( new BranchSelectCombo() ); // kisa
+  //pBoxLayout->addWidget( new BranchSelectCombo() ); // kisa
 
   pBoxLayout->addWidget( gitresetbtn );
   pBoxLayout->addWidget( gitpullcanceltbtn );  
@@ -521,16 +521,16 @@ void SwitchOpenpilot::getBranchID(const QString &branchid) {
 OpenpilotUserEnv::OpenpilotUserEnv() : ButtonControl(tr("Get Your Params"), "", tr("Get parameters from github. This is useful to apply your own file.")) {
   QObject::connect(this, &ButtonControl::clicked, [=]() {
     if (text() == tr("GET")) {
-      QString userid = InputDialog::getText(tr("Input your Git ID"), this, "github.com/<your id>/openpilot_user/main/user_params.txt", false, 1, "multikyd");
+      QString userid = InputDialog::getText(tr("Input your Git ID"), this, "github.com/<your id>/openpilot_user/main/user_params.txt", false, 1, "");
       if (userid.length() > 0) {
         getUserID(userid);
-        QString repoid = InputDialog::getText(tr("Input your repository"), this, "github.com/"+userid, false, 1, "openpilot_user");
+        QString repoid = InputDialog::getText(tr("Input your repository"), this, "github.com/"+userid, false, 1, "");
         if (repoid.length() > 0) {
           getRepoID(repoid);
-          QString branchid = InputDialog::getText(tr("Input your branch"), this, "github.com/"+userid+"/"+repoid, false, 1, "main");
+          QString branchid = InputDialog::getText(tr("Input your branch"), this, "github.com/"+userid+"/"+repoid, false, 1, "");
           if (branchid.length() > 0) {
             getBranchID(branchid);
-            QString fileid = InputDialog::getText(tr("Input your file"), this, "github.com/"+userid+"/"+repoid+"/"+branchid, false, 1, "user_params.txt");
+            QString fileid = InputDialog::getText(tr("Input your file"), this, "github.com/"+userid+"/"+repoid+"/"+branchid, false, 1, "");
             if (fileid.length() > 0) {
               getFileID(fileid);
               githubbranch = branchid;

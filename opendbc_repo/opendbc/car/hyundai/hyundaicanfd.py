@@ -104,8 +104,8 @@ def create_suppress_lfa(packer, CAN, hda2_lfa_block_msg, hda2_alt_steering, enab
   
   values["LEFT_LANE_LINE_PROB"] = hda2_lfa_block_msg["LEFT_LANE_LINE_PROB"] # maybe double lane above 20
   values["RIGHT_LANE_LINE_PROB"] = hda2_lfa_block_msg["RIGHT_LANE_LINE_PROB"] # maybe double lane above 20
-  values["LEFT_LANE_TYPE"] = hda2_lfa_block_msg["LEFT_LANE_TYPE"]
-  values["RIGHT_LANE_TYPE"] = hda2_lfa_block_msg["RIGHT_LANE_TYPE"]
+  values["LEFT_LANE_TYPE"] = 0   # hda2_lfa_block_msg["LEFT_LANE_TYPE"]
+  values["RIGHT_LANE_TYPE"] = 0  # hda2_lfa_block_msg["RIGHT_LANE_TYPE"]
   values["LEFT_LANE_COLOR"] = hda2_lfa_block_msg["LEFT_LANE_COLOR"]
   values["RIGHT_LANE_COLOR"] = hda2_lfa_block_msg["RIGHT_LANE_COLOR"]
   values["LEFT_GUARD"] = hda2_lfa_block_msg["LEFT_GUARD"]
