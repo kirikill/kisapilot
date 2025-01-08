@@ -193,8 +193,6 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Repository/Branch") )
     GitPullCancel::confirm(this);
   });
 
-  pBoxLayout->addWidget( new GitPullOnBootToggle() );
-
   pBoxLayout->addWidget( new SwitchOpenpilot() ); // kisa
   //pBoxLayout->addWidget( new BranchSelectCombo() ); // kisa
 

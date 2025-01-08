@@ -3381,17 +3381,6 @@ This may take up to a minute.</source>
     </message>
 </context>
 <context>
-    <name>GitPullOnBootToggle</name>
-    <message>
-        <source>Git Pull On Boot</source>
-        <translation>부팅 시 Git Pull</translation>
-    </message>
-    <message>
-        <source>If there is an update after the boot, run Git Pull automatically and reboot.</source>
-        <translation>부팅 후 업데이트가 있을 경우 Git Pull을 자동으로 실행하고 재부팅합니다.</translation>
-    </message>
-</context>
-<context>
     <name>StoppingDistAdjToggle</name>
     <message>
         <source>Adjust Stopping Distance</source>

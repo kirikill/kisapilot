@@ -140,7 +140,6 @@ typedef struct UIScene {
   bool nDebugUi2;
   bool nDebugUi3;
   bool nKisaBlindSpotDetect;
-  bool auto_gitpull = false;
   bool is_speed_over_limit = false;
   bool controlAllowed;
   bool steer_warning;

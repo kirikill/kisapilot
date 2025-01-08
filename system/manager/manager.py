@@ -143,7 +143,6 @@ def manager_init() -> None:
     ("SafetyCamDecelDistGain", "0"),
     ("KisaLiveTunePanelEnable", "0"),
     ("RadarLongHelper", "2"),
-    ("GitPullOnBoot", "0"),
     ("LiveSteerRatioPercent", "0"),
     ("StoppingDistAdj", "0"),
     ("ShowError", "1"),

@@ -301,7 +301,6 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"KisaLiveTunePanelEnable", PERSISTENT},
     {"BottomTextView", PERSISTENT},
     {"RadarLongHelper", PERSISTENT},
-    {"GitPullOnBoot", PERSISTENT},
     {"LiveSteerRatioPercent", PERSISTENT},
     {"StoppingDistAdj", PERSISTENT},
     {"ShowError", PERSISTENT},

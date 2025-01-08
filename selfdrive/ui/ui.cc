@@ -320,17 +320,6 @@ void UIState::updateStatus() {
     }
   }
 
-  // this is useful to save compiling time before depart when you use remote ignition
-  if (!scene.auto_gitpull && (sm->frame - scene.started_frame > 30*UI_FREQ)) {
-    if (Params().getBool("GitPullOnBoot")) {
-      scene.auto_gitpull = true;
-      Params().put("RunCustomCommand", "2", 1);
-    } else if (sm->frame - scene.started_frame > 300*UI_FREQ) {
-      scene.auto_gitpull = true;
-      Params().put("RunCustomCommand", "1", 1);
-    }
-  }
-
   if (!scene.read_params_once) {
     Params params;
     // user param value init
