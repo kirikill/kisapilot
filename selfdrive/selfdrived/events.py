@@ -667,6 +667,14 @@ EVENTS: dict[int, dict[str, Alert | AlertCallbackType]] = {
       Priority.LOW, VisualAlert.none, AudibleAlert.none, .1),
   },
 
+  EventName.laneChangeFinish: {
+    ET.WARNING: Alert(
+      tr(196),
+      "",
+      AlertStatus.normal, AlertSize.small,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1),
+  },
+
   EventName.e2eLongAlert: {
     ET.WARNING: Alert(
       tr(62),

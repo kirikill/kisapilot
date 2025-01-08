@@ -158,6 +158,7 @@ struct OnroadEvent @0xc4fa6047f024e718 {
     chimeAtResume @120;
     autoHold @121;
     lkasDisabled @122;
+    laneChangeFinish @123;
   }
 }
 

@@ -272,9 +272,10 @@ class SelfdriveD:
               self.events.add(EventName.preLaneChangeRight)
             else:
               self.events.add(EventName.laneChange)
-      elif latplan_type.laneChangeState in (LaneChangeState.laneChangeStarting,
-                                           LaneChangeState.laneChangeFinishing):
+      elif latplan_type.laneChangeState == LaneChangeState.laneChangeStarting:
         self.events.add(EventName.laneChange)
+      elif latplan_type.laneChangeState == LaneChangeState.laneChangeFinishing:
+        self.events.add(EventName.laneChangeFinish)
 
     for i, pandaState in enumerate(self.sm['pandaStates']):
       # All pandas must match the list of safetyConfigs, and if outside this list, must be silent or noOutput
