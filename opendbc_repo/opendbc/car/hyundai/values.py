@@ -564,7 +564,7 @@ class CAR(Platforms):
       HyundaiCarDocs("Genesis GV70 Facelift (with HDA II) 2025", "All", car_parts=CarParts.common([CarHarness.hyundai_a])),
     ],
     CarSpecs(mass=1950, wheelbase=2.87, steerRatio=14.6),
-    flags=HyundaiFlags.ANGLE_CONTROL,
+    flags=HyundaiFlags.CAMERA_SCC | HyundaiFlags.ANGLE_CONTROL,
   )
   GENESIS_GV70_ELECTRIFIED_1ST_GEN = HyundaiCanFDPlatformConfig(
     [

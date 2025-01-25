@@ -76,6 +76,28 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
     if CP.openpilotLongitudinalControl:
       ret.append(packer.make_can_msg("LFA", CAN.ECAN, values))
     ret.append(packer.make_can_msg(hda2_lkas_msg, CAN.ACAN, values))
+  elif angle_control:
+    values = {
+      "LKAS_ANGLE_ACTIVE": 1 if lat_active else 0,
+      "LKAS_ANGLE_STANDBY": 0 if lat_active else 1,
+      "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
+      "LKAS_ANGLE_MAX_TORQUE": max_torque if lat_active else 0,
+    }
+    ret.append(packer.make_can_msg("LKAS_ADAS", CAN.ECAN, values))
+    values = {
+      "LKA_MODE": 0,
+      "LKA_ACTIVE": 3 if lat_active else 0,
+      "LKA_ICON": 2 if enabled else 1,
+      "TORQUE_REQUEST": -1024,
+      "LKA_ASSIST": 0,
+      "STEER_REQ": 0,
+      "STEER_MODE": 0,
+      "HAS_LANE_SAFETY": 0,  # hide LKAS settings
+      "NEW_SIGNAL_2": 0,
+      "NEW_SIGNAL_3": 0,
+      "NEW_SIGNAL_4": 1,
+    }
+    ret.append(packer.make_can_msg("LFA", CAN.ECAN, values))
   else:
     values = {
       "LKA_MODE": 0,

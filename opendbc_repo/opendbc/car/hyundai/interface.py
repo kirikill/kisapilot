@@ -46,7 +46,7 @@ class CarInterface(CarInterfaceBase):
       ret.autoHoldAvailable = False
       ret.lfaHdaAvailable = False
       ret.navAvailable = False
-      ret.adrvAvailable = 0x200 in fingerprint[CAN.ECAN]
+      ret.adrvAvailable = (hda2 and 0x200 in fingerprint[CAN.ECAN]) or 0x200 in fingerprint[cam_can]
       ret.brakeAvailable = 0x65 in fingerprint[CAN.ECAN]
       ret.tpmsAvailable = 0x3a0 in fingerprint[CAN.ECAN]
 

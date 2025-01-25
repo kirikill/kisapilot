@@ -761,7 +761,7 @@ class CarState(CarStateBase):
       ret.autoHold = ret.brakeHoldActive
 
       if self.CP.adrvAvailable:
-        ret.cruiseState.gapSet = cp.vl["ADRV_0x200"]["TauGapSet"]
+        ret.cruiseState.gapSet = cp_cruise_info.vl["ADRV_0x200"]["TauGapSet"]
       self.cruiseGapSet = ret.cruiseState.gapSet
       ret.cruiseGapSet = self.cruiseGapSet
       self.DistSet = cp_cruise_info.vl["SCC_CONTROL"]["DISTANCE_SETTING"] - 5 if cp_cruise_info.vl["SCC_CONTROL"]["DISTANCE_SETTING"] > 5 else cp_cruise_info.vl["SCC_CONTROL"]["DISTANCE_SETTING"]
@@ -782,7 +782,7 @@ class CarState(CarStateBase):
       elif self.driverAcc_time:
         self.driverAcc_time -= 1
       ret.driverAcc = bool(self.driverOverride)
-      if self.CP.carFingerprint in ANGLE_CONTROL_CAR:
+      if self.CP.carFingerprint in ANGLE_CONTROL_CAR and self.CP.flags & HyundaiFlags.CANFD_HDA2:
         self.stock_str_angle = cp_cam.vl["LKAS_ALT"]["LKAS_ANGLE_CMD"] * -1 if self.CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING else 0
 
     # Manual Speed Limit Assist is a feature that replaces non-adaptive cruise control on EV CAN FD platforms.
@@ -858,7 +858,7 @@ class CarState(CarStateBase):
         ("SCC_CONTROL", 50),
       ]
 
-    if CP.adrvAvailable:
+    if CP.adrvAvailable and CP.flags & HyundaiFlags.CANFD_HDA2:
       pt_messages += [
         ("ADRV_0x200", 20),
       ]
@@ -885,6 +885,10 @@ class CarState(CarStateBase):
       cam_messages += [
         ("SCC_CONTROL", 50),
       ]
+      if CP.adrvAvailable and not CP.flags & HyundaiFlags.CANFD_HDA2:
+        cam_messages += [
+          ("ADRV_0x200", 20),
+        ]
 
     return {
       Bus.pt: CANParser(DBC[CP.carFingerprint][Bus.pt], pt_messages, CanBus(CP).ECAN),
