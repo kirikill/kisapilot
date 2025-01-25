@@ -78,8 +78,7 @@ def create_steering_messages(packer, CP, CAN, enabled, lat_active, steering_pres
     ret.append(packer.make_can_msg(hda2_lkas_msg, CAN.ACAN, values))
   elif angle_control:
     values = {
-      "LKAS_ANGLE_ACTIVE": 1 if lat_active else 0,
-      "LKAS_ANGLE_STANDBY": 0 if lat_active else 1,
+      "LKAS_ANGLE_ACTIVE": 2 if lat_active else 1,
       "LKAS_ANGLE_CMD": -apply_angle if lat_active else 0,
       "LKAS_ANGLE_MAX_TORQUE": max_torque if lat_active else 0,
     }
