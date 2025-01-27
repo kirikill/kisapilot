@@ -637,6 +637,10 @@ class CarState(CarStateBase):
 
     gear = cp.vl[self.gear_msg_canfd]["GEAR"]
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(gear))
+    if self.CP.flags & HyundaiFlags.CANFD_ALT_GEARS:
+      ret.gearStep = cp.vl[self.gear_msg_canfd]["GEAR_STEP"]
+    else:
+      ret.gearStep = 0
 
     # kisa
     if self.CP.tpmsAvailable:

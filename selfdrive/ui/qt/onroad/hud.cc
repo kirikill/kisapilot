@@ -296,7 +296,7 @@ void HudRenderer::draw(QPainter &p, const QRect &surface_rect) {
         p.setPen(whiteColor(200));
         debugText(p, sp_xl, sp_yl, QString("GEAR"), 150, 27);
         p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl+60, "D " + QString::number(s->scene.gear_step, 'f', 0), 150, 57);
+        debugText(p, sp_xl, sp_yl+60, "D" + ((0 < s->scene.gear_step && s->scene.gear_step < 9) ? " " + QString::number(s->scene.gear_step, 'f', 0) : ""), 150, 57);
       }
       p.translate(sp_xl + 90, sp_yl + 20);
       p.rotate(-90);
