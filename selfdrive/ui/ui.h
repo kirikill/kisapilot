@@ -187,10 +187,12 @@ typedef struct UIScene {
 
   int user_specific_feature = 0;
   bool use_radar_value;
+  bool no_smart_mdps;
   bool error_occurred = false;
   int standstillElapsedTime = 0;
 
   QString model_name;
+  QString branch_name;
 
   cereal::DeviceState::Reader deviceState;
   cereal::PeripheralState::Reader peripheralState;
@@ -288,7 +290,7 @@ typedef struct UIScene {
   cereal::LongitudinalPersonality personality;
 
   float light_sensor = -1;
-  bool started, ignition, is_metric, longitudinal_control;
+  bool started, ignition, is_metric, longitudinal_control, pcm_cruise;
   uint64_t started_frame;
 } UIScene;
 

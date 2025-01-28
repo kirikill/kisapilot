@@ -178,6 +178,7 @@ static void update_state(UIState *s) {
     scene.longitudinal_control = cp_data.getOpenpilotLongitudinalControl();
     scene.steer_actuator_delay = cp_data.getSteerActuatorDelay();
     scene.car_fingerprint = cp_data.getCarFingerprint();
+    scene.pcm_cruise = cp_data.getPcmCruise();
   }
   if (sm.updated("wideRoadCameraState")) {
     auto cam_state = sm["wideRoadCameraState"].getWideRoadCameraState();
@@ -373,9 +374,11 @@ void UIState::updateStatus() {
     scene.ufc_mode = params.getBool("UFCModeEnabled");
     scene.op_long_enabled = params.getBool("ExperimentalLongitudinalEnabled");
     scene.model_name = QString::fromStdString(params.get("DrivingModel"));
+    scene.branch_name = QString::fromStdString(params.get("GitBranch"));
     scene.hotspot_on_boot = params.getBool("KisaHotspotOnBoot");
     scene.user_specific_feature = std::stoi(params.get("UserSpecificFeature"));
     scene.use_radar_value = params.getBool("UseRadarValue");
+    scene.no_smart_mdps = params.getBool("NoSmartMDPS");
 
     if (scene.autoScreenOff > 0) {
       scene.nTime = scene.autoScreenOff * 60 * UI_FREQ;
