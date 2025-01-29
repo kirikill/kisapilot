@@ -117,14 +117,12 @@ void HudRenderer::draw(QPainter &p, const QRect &surface_rect) {
     uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+280:ui_viz_ry+320, "PSM:" + QString::fromStdString(s->scene.selfdrive_state.getPandaSafetyModel()) +
      "/ISM:" + QString::fromStdString(s->scene.selfdrive_state.getInterfaceSafetyModel()));
     uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+320:ui_viz_ry+360, "MDL:" + s->scene.model_name + "/BR:" + s->scene.branch_name);
-    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+360:ui_viz_ry+400, "RXC:" + QString::number(int(s->scene.selfdrive_state.getRxChecks())) +
-     "/MCT:" + QString::number(int(s->scene.selfdrive_state.getMismatchCounter())));
-    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+400:ui_viz_ry+440, "PTY:" + QString::number(int(s->scene.pandaType)) +
-     "/IGN:" + QString::number(int(s->scene.ignition)) + "/EXP:" + QString::number(int(s->scene.experimental_mode)));
-    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+440:ui_viz_ry+480, "PCM:" + QString::number(int(s->scene.pcm_cruise)) + "/LONG:" + QString::number(int(s->scene.longitudinal_control)) + 
-     "/CAW:" + QString::number(int(s->scene.controlAllowed)) + "/ENA:" + QString::number(int(s->scene.enabled)));
-    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+480:ui_viz_ry+520, "STK:" + QString::number(int(s->scene.stock_lkas_on_disengagement)) +
-     "/UFC:" + QString::number(int(s->scene.ufc_mode)) + "/NSM:" + QString::number(int(s->scene.no_smart_mdps)));
+    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+360:ui_viz_ry+400, "RXC:" + QString::number(int(s->scene.selfdrive_state.getRxChecks())) + "/MCT:" + QString::number(int(s->scene.selfdrive_state.getMismatchCounter())) +
+     "/PTY:" + QString::number(int(s->scene.pandaType)) + "/IGN:" + QString::number(int(s->scene.ignition)) + "/EXP:" + QString::number(int(s->scene.experimental_mode)));
+    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+400:ui_viz_ry+440, "PCM:" + QString::number(int(s->scene.pcm_cruise)) + "/LO:" + QString::number(int(s->scene.longitudinal_control)) + 
+     "/CAW:" + QString::number(int(s->scene.controlAllowed)) + "/ENA:" + QString::number(int(s->scene.enabled)) + "/C:" + QString::number(int(s->scene.cavailable)) + QString::number(int(s->scene.cenabled)));
+    uiText(p, ui_viz_rx+400, s->scene.low_ui_profile?ui_viz_ry+440:ui_viz_ry+480, "STK:" + QString::number(int(s->scene.stock_lkas_on_disengagement)) +
+     "/UFC:" + QString::number(int(s->scene.ufc_mode)) + "/NSM:" + QString::number(int(s->scene.no_smart_mdps)) + "/LFA:" + QString::number(int(s->scene.lfa_button_eng)) + "/USF:" + QString::number(int(s->scene.user_specific_feature)));
   }
   if (s->scene.nDebugUi2 && s->scene.comma_stock_ui != 1) {
     p.setFont(InterFont(35, QFont::DemiBold));

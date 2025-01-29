@@ -98,6 +98,8 @@ class CarState(CarStateBase):
     self.prev_main_btn = False
     self.prev_lfa_btn = False
     self.prev_lfa_btn_timer = 0
+    self.prev_main_btn2 = False
+    self.prev_main_btn_timer = 0
     self.acc_active = False
     self.cruise_set_speed_kph = 0
     self.cruise_set_mode = int(Params().get("CruiseStatemodeSelInit", encoding="utf8"))
@@ -105,6 +107,7 @@ class CarState(CarStateBase):
     self.cruiseGapSet = 4.0
 
     self.ufc_mode = Params().get_bool("UFCModeEnabled")
+    self.user_specific_feature = int(Params().get("UserSpecificFeature", encoding="utf8"))
     self.lfa_button_eng = Params().get_bool("LFAButtonEngagement")
     self.long_alt = int(Params().get("KISALongAlt", encoding="utf8"))
     self.exp_engage_available = False
@@ -460,8 +463,24 @@ class CarState(CarStateBase):
       ret.cruiseAccStatus = self.acc_active
       ret.cruiseGapSet = self.cruise_gap
     else:
-      ret.cruiseState.available = cp_scc.vl["SCC11"]["MainMode_ACC"] != 0
-      ret.cruiseState.enabled = cp_scc.vl["SCC12"]["ACCMode"] != 0
+      if self.user_specific_feature != 38:
+        ret.cruiseState.available = cp_scc.vl["SCC11"]["MainMode_ACC"] != 0
+        ret.cruiseState.enabled = cp_scc.vl["SCC12"]["ACCMode"] != 0
+
+      if self.user_specific_feature = 38:
+        if self.main_buttons[-1]:
+          self.prev_main_btn_timer = 2
+        elif self.prev_main_btn_timer:
+          self.prev_main_btn_timer -= 1
+          if self.prev_main_btn_timer == 0:
+            self.prev_main_btn2 = not self.prev_main_btn2
+        if self.prev_main_btn2:
+          ret.cruiseState.available = True
+          ret.cruiseState.enabled = ret.cruiseState.available
+        else:
+          ret.cruiseState.available = False
+          ret.cruiseState.enabled = ret.cruiseState.available
+
       ret.cruiseState.standstill = cp_scc.vl["SCC11"]["SCCInfoDisplay"] == 4.
       ret.cruiseState.nonAdaptive = cp_cruise.vl["SCC11"]["SCCInfoDisplay"] == 2.  # Shows 'Cruise Control' on dash
       if self.ufc_mode:

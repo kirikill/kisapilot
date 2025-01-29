@@ -65,6 +65,8 @@ static void update_state(UIState *s) {
     auto cs_data = sm["carState"].getCarState();
     auto cruiseState = scene.car_state.getCruiseState();
     scene.awake = cruiseState.getCruiseSwState();
+    scene.cavailable = cruiseState.getAvailable();
+    scene.cenabled = cruiseState.getEnabled();
 
     if (scene.leftBlinker!=cs_data.getLeftBlinker() || scene.rightBlinker!=cs_data.getRightBlinker()) {
       scene.blinker_blinkingrate = 120;
@@ -379,6 +381,7 @@ void UIState::updateStatus() {
     scene.user_specific_feature = std::stoi(params.get("UserSpecificFeature"));
     scene.use_radar_value = params.getBool("UseRadarValue");
     scene.no_smart_mdps = params.getBool("NoSmartMDPS");
+    scene.lfa_button_eng = params.getBool("LFAButtonEngagement");
 
     if (scene.autoScreenOff > 0) {
       scene.nTime = scene.autoScreenOff * 60 * UI_FREQ;

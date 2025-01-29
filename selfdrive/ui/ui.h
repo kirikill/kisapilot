@@ -188,8 +188,10 @@ typedef struct UIScene {
   int user_specific_feature = 0;
   bool use_radar_value;
   bool no_smart_mdps;
+  bool lfa_button_eng;
   bool error_occurred = false;
   int standstillElapsedTime = 0;
+  bool cavailable, cenabled;
 
   QString model_name;
   QString branch_name;
