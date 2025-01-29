@@ -467,7 +467,7 @@ class CarState(CarStateBase):
         ret.cruiseState.available = cp_scc.vl["SCC11"]["MainMode_ACC"] != 0
         ret.cruiseState.enabled = cp_scc.vl["SCC12"]["ACCMode"] != 0
 
-      if self.user_specific_feature = 38:
+      if self.user_specific_feature == 38:
         if self.main_buttons[-1]:
           self.prev_main_btn_timer = 2
         elif self.prev_main_btn_timer:
