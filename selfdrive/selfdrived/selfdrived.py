@@ -31,7 +31,7 @@ USE_LEGACY_LANE_MODEL = int(Params().get("UseLegacyLaneModel", encoding="utf8"))
 REPLAY = "REPLAY" in os.environ
 SIMULATION = "SIMULATION" in os.environ
 TESTING_CLOSET = "TESTING_CLOSET" in os.environ
-IGNORE_PROCESSES = {"loggerd", "encoderd", "statsd", "mapd"}
+IGNORE_PROCESSES = {"loggerd", "encoderd", "statsd", "mapd", "updated"}
 LONGITUDINAL_PERSONALITY_MAP = {v: k for k, v in log.LongitudinalPersonality.schema.enumerants.items()}
 
 ThermalStatus = log.DeviceState.ThermalStatus

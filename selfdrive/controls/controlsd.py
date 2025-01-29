@@ -308,7 +308,7 @@ class Controls:
           cs.limitSpeedCamera = float(self.roadname_and_slc[r_index+1])
         except:
           pass
-    elif self.navi_selection == 1 and str(self.sm['liveENaviData'].safetySign) not in ("20", "21"):
+    elif self.navi_selection in (1, 3) and str(self.sm['liveENaviData'].safetySign) not in ("20", "21"):
       cs.limitSpeedCamera = int(round(self.sm['liveENaviData'].speedLimit))
       cs.limitSpeedCameraDist = float(self.sm['liveENaviData'].safetyDistance)
       cs.mapSign = str(self.sm['liveENaviData'].safetySign)

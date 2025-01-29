@@ -166,7 +166,7 @@ void HudRenderer::draw(QPainter &p, const QRect &surface_rect) {
         }
       }
     }
-    if (s->scene.navi_select == 1) {
+    if (s->scene.navi_select == 1 || s->scene.navi_select == 3) {
       if (s->scene.liveENaviData.ekisasafetysign != "") uiText(p, ui_viz_rx, ui_viz_ry+560, "CS:" + QString::fromStdString(s->scene.liveENaviData.ekisasafetysign));
       if (s->scene.liveENaviData.ekisasafetydist) uiText(p, ui_viz_rx, ui_viz_ry+600, "SL:" + QString::number(s->scene.liveENaviData.ekisaspeedlimit, 'f', 0) + "/DS:" + QString::number(s->scene.liveENaviData.ekisasafetydist, 'f', 0));
       if (s->scene.liveENaviData.ekisaturninfo != "") uiText(p, ui_viz_rx, ui_viz_ry+640, "TI:" + QString::fromStdString(s->scene.liveENaviData.ekisaturninfo) + "/DT:" + QString::number(s->scene.liveENaviData.ekisadisttoturn, 'f', 0));
@@ -986,7 +986,7 @@ void HudRenderer::draw(QPainter &p, const QRect &surface_rect) {
 
     QString road_name = "";
     QString oref = "";
-    if (s->scene.navi_select == 1 && s->scene.liveMapData.ocurrentRoadName == "") {
+    if ((s->scene.navi_select == 1 || s->scene.navi_select == 3) && s->scene.liveMapData.ocurrentRoadName == "") {
       road_name = QString::fromStdString(s->scene.liveENaviData.ekisaroadname);
     } else if (s->scene.navi_select == 2) {
       road_name = QString::fromStdString(s->scene.liveENaviData.ewazeroadname);
