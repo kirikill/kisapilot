@@ -135,8 +135,10 @@ void HudRenderer::draw(QPainter &p, const QRect &surface_rect) {
     uiText(p, ui_viz_rx, ui_viz_ry+320, "SF:" + QString::number(s->scene.liveParams.stiffnessFactor, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+360, "AD:" + QString::number(s->scene.steer_actuator_delay, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+400, "OS:" + QString::number(s->scene.output_scale, 'f', 2));
-    uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.dProb, 'f', 1) + "/" + QString::number(s->scene.lateralPlan.laneWidth, 'f', 1) + "m"
-                                + "/" + QString::number(s->scene.lateralPlan.totalCameraOffset, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.dProb, 'f', 1) + "/" + QString::number(s->scene.lateralPlan.laneWidth, 'f', 1) + "m" +
+     "/" + QString::number(s->scene.lateralPlan.totalCameraOffset, 'f', 2) + 
+     "/" + QString::number(s->scene.lateralPlan.leftLanetoLeftEdgeWidth, 'f', 1) +
+     "/" + QString::number(s->scene.lateralPlan.rightLanetoRightEdgeWidth, 'f', 1));
 
     if (!s->scene.low_ui_profile) {
       QString szLaCMethod = "";
@@ -794,12 +796,8 @@ void HudRenderer::draw(QPainter &p, const QRect &surface_rect) {
     QString szTuneParam = "";
     int list_menu = live_tune_panel_list - (s->scene.list_count);
     if (live_tune_panel_list == 0) {
-      //szTuneParam.sprintf("%+0.3f", s->scene.cameraOffset*0.001);
       szTuneParam.sprintf("%+0.3f", s->scene.cameraOffset*0.001);
       szTuneName = "CameraOffset";
-    } else if (live_tune_panel_list == 1) {
-      szTuneParam.sprintf("%+0.3f", s->scene.pathOffset*0.001);
-      szTuneName = "PathOffset";
     } else if (lateralControlMethod == 0) {  // 0.PID
       if ( list_menu == 0 ) {
         szTuneParam.sprintf("%0.2f", s->scene.pidKp*0.01);

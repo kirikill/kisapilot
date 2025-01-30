@@ -85,10 +85,9 @@ void HomeWindow::mousePressCommon(QMouseEvent* e, int nDir) {
     clip(uiState()->scene.cameraOffset, -1000, 1000);
     QString value = QString::number(uiState()->scene.cameraOffset);
     Params().put("CameraOffsetAdj", value.toStdString());
-  } else if (live_tune_panel_list == 1) {
     uiState()->scene.pathOffset += 5*nDir;
     clip(uiState()->scene.pathOffset, -1000, 1000);
-    QString value = QString::number(uiState()->scene.pathOffset);
+    value = QString::number(uiState()->scene.pathOffset);
     Params().put("PathOffsetAdj", value.toStdString());
   }
 }

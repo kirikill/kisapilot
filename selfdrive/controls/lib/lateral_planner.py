@@ -107,6 +107,8 @@ class LateralPlanner:
     self.sm = messaging.SubMaster(['liveMapData'])
     self.total_camera_offset = self.camera_offset
     self.is_mph = not self.params.get_bool("IsMetric")
+    self.right_lane_to_right_edge_width = 0.0
+    self.left_lane_to_left_edge_width = 0.0
 
 
   def parse_model(self, md, sm, v_ego):
@@ -162,10 +164,14 @@ class LateralPlanner:
       right_nearside_prob = md.laneLineProbs[3]
       right_edge_prob = np.clip(1.0 - md.roadEdgeStds[1], 0.0, 1.0)
 
+      self.right_lane_to_right_edge_width = abs(self.rll_y[0] - md.roadEdges[1].y[0])
+      self.left_lane_to_left_edge_width = abs(self.lll_y[0] - md.roadEdges[0].y[0])
+      right_lane_to_edge_threshold = 2.0
+
       self.timer3 += DT_MDL
       if self.timer3 > 1.0:
         self.timer3 = 0.0
-        if right_nearside_prob < 0.2 and left_nearside_prob < 0.2:
+        if (right_nearside_prob < 0.2 and left_nearside_prob < 0.2) or (self.right_lane_to_right_edge_width > right_lane_to_edge_threshold):
           if self.road_edge_offset != 0.0:
             if self.road_edge_offset > 0.0:
               self.road_edge_offset -= max(0.01, round((self.road_edge_offset/5), 2))
@@ -459,5 +465,7 @@ class LateralPlanner:
     lateralPlan.vCurvature = float(sm['controlsState'].curvature)
     lateralPlan.lanelessMode = bool(self.laneless_mode_status)
     lateralPlan.totalCameraOffset = float(self.total_camera_offset)
+    lateralPlan.rightLanetoRightEdgeWidth = float(self.right_lane_to_right_edge_width)
+    lateralPlan.leftLanetoLeftEdgeWidth = float(self.left_lane_to_left_edge_width)
 
     pm.send('lateralPlan', plan_send)

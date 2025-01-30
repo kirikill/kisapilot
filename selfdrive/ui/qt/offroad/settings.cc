@@ -412,7 +412,7 @@ TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
   // kisapilot
   //layout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓〓〓"), ""));
   layout->addWidget(new CameraOffset());
-  layout->addWidget(new PathOffset());
+  //layout->addWidget(new PathOffset());
   layout->addWidget(new SteerAngleCorrection());
   layout->addWidget(horizontal_line());
 

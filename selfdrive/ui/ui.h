@@ -132,7 +132,7 @@ typedef struct UIScene {
   bool live_tune_panel_enable;
   int bottom_text_view;
   int live_tune_panel_list = 0;
-  int list_count = 2;
+  int list_count = 1;
   int nTime, autoScreenOff, brightness, awake;
   int nVolumeBoost = 0;
   bool read_params_once = false;
@@ -228,6 +228,8 @@ typedef struct UIScene {
     float angleOffset;
     bool lanelessModeStatus;
     float totalCameraOffset;
+    float rightLanetoRightEdgeWidth;
+    float leftLanetoLeftEdgeWidth;
   } lateralPlan;
 
   struct _LiveENaviData

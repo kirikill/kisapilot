@@ -107,6 +107,7 @@ class Controls:
     self.navi_selection = int(self.params.get("KISANaviSelect", encoding="utf8"))
     self.legacy_lane_mode = int(self.params.get("UseLegacyLaneModel", encoding="utf8"))
     self.standstill_elapsed_time = 0.0
+    self.timer = 0.0
 
   def update(self):
     self.sm.update(15)
@@ -115,6 +116,12 @@ class Controls:
     if self.sm.updated["livePose"]:
       device_pose = Pose.from_live_pose(self.sm['livePose'])
       self.calibrated_pose = self.pose_calibrator.build_calibrated_pose(device_pose)
+
+    self.timer += DT_CTRL
+    if self.timer > 1.0:
+      self.timer = 0.0
+      self.live_sr = self.params.get_bool("KisaLiveSteerRatio")
+      self.live_sr_percent = int(self.params.get("LiveSteerRatioPercent", encoding="utf8"))
 
   def state_control(self):
     CS = self.sm['carState']

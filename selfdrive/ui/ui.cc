@@ -210,6 +210,8 @@ static void update_state(UIState *s) {
     scene.lateralPlan.rProb = lp_data.getRProb();
     scene.lateralPlan.lanelessModeStatus = lp_data.getLanelessMode();
     scene.lateralPlan.totalCameraOffset = lp_data.getTotalCameraOffset();
+    scene.lateralPlan.rightLanetoRightEdgeWidth = lp_data.getRightLanetoRightEdgeWidth();
+    scene.lateralPlan.leftLanetoLeftEdgeWidth = lp_data.getLeftLanetoLeftEdgeWidth();
   }
   if (sm.updated("longitudinalPlan")) {
     scene.longitudinal_plan = sm["longitudinalPlan"].getLongitudinalPlan();

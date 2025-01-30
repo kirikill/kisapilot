@@ -1429,6 +1429,8 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   lanelessMode @37 :Bool;
   modelSpeed @38 :Float32;
   totalCameraOffset @39 :Float32;
+  rightLanetoRightEdgeWidth @40 :Float32;
+  leftLanetoLeftEdgeWidth @41 :Float32;
 
   enum Desire {
     none @0;
