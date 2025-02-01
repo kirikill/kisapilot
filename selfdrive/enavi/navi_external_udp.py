@@ -69,7 +69,7 @@ def udp_broadcast_listener():
         road_name = str(data_dict.get('kisaroadname'))
       elif "Kisa_Tmap_Alive" in data.decode('utf-8'):
         cnt2 += 1
-        if cnt2 > cnt_threshold:
+        if cnt2 > cnt_threshold+2:
           cnt2 = 0
           road_limit_speed = 0
           road_name = ''
